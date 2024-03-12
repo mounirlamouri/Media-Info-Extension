@@ -107,7 +107,7 @@ async function videoMetrics(vid) {
     overlay.style.top = "40px";
     overlay.style.left = "40px";
     overlay.style.color = "#fff";
-    overlay.style.width = "160px";
+    overlay.style.width = "200px";
     overlay.style.height = "120px";
     overlay.style.fontSize = "12px";
     overlay.style.backgroundColor = "rgba(40, 40, 40, 0.7)";

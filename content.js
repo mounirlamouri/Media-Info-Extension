@@ -64,6 +64,30 @@ async function videoMetrics(vid) {
         const videoContainer = vid.parentNode;
         videoContainer.appendChild(overlay);
 
+        // Set the overlay text to the current time
+        overlay.innerHTML = `<table>
+        <tr>
+            <th>Video Stats</th>
+            <th>&emsp;<button id="hideButton">X</button></th>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">Viewport: </td>
+            <td id="viewport"></td>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">Resolution: </td>
+            <td id="videoRes"></td>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">Frame drop: </td>
+            <td id="frameDrop"></td>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">DRM: </td>
+            <td id="drm"></td>
+        </tr>
+        </table>`;
+
         // Update the overlay text on each frame
         vid.addEventListener("timeupdate", function () {
             const rect = vid.getBoundingClientRect();
@@ -77,28 +101,10 @@ async function videoMetrics(vid) {
             var droppedFrames = quality.droppedVideoFrames;
             var frameDrop = `${droppedFrames} / ${totalFrames}`;
 
-            // Set the overlay text to the current time
-            overlay.innerHTML = `<table>
-            <tr>
-                <th>Video Stats</th>
-            </tr>
-            <tr>
-                <td style="text-align:right; font-weight:bold;">Viewport: </td>
-                <td>${viewport}</td>
-            </tr>
-            <tr>
-                <td style="text-align:right; font-weight:bold;">Resolution: </td>
-                <td>${videoRes}</td>
-            </tr>
-            <tr>
-                <td style="text-align:right; font-weight:bold;">Frame drop: </td>
-                <td>${frameDrop}</td>
-            </tr>
-            <tr>
-                <td style="text-align:right; font-weight:bold;">DRM: </td>
-                <td>${drm}</td>
-            </tr>
-            </table>`;
+            document.getElementById("viewport").innerHTML = viewport;
+            document.getElementById("videoRes").innerHTML = videoRes;
+            document.getElementById("frameDrop").innerHTML = frameDrop;
+            document.getElementById("drm").innerHTML = drm;
         });
     }
 
@@ -113,4 +119,22 @@ async function videoMetrics(vid) {
     overlay.style.backgroundColor = "rgba(40, 40, 40, 0.7)";
     overlay.style.padding = "10px";
     overlay.style.borderRadius = "5px";
+
+    // Create the hide button
+    var hideButton = document.getElementById('hideButton');
+    if (hideButton) {
+        hideButton.style.position = "absolute";
+        hideButton.style.top = "5";
+        hideButton.style.right = "5";
+        hideButton.textContent = "X";
+        hideButton.style.fontSize = "12px";
+        hideButton.style.color = "#fff";
+        hideButton.style.backgroundColor = "rgba(40, 40, 40, 0.1)";
+        hideButton.style.borderRadius = "5px";
+        // Add the click event to the hide button
+        hideButton.addEventListener('click', function() {
+            overlay.style.display = 'none';
+        });
+
+    }
 }

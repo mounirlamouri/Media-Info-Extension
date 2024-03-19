@@ -18,7 +18,7 @@ async function videoMetrics(vid) {
     console.log('Testing console from video stats extension');
 
     // L3 DRM
-    const isL3DRM = await (
+    const supportsL3DRM = await (
         navigator.requestMediaKeySystemAccess &&
         navigator.requestMediaKeySystemAccess('com.widevine.alpha', [{
             videoCapabilities: [
@@ -34,7 +34,7 @@ async function videoMetrics(vid) {
     ) || false
 
     // L1 DRM
-    const isL1DRM = await (
+    const supportsL1DRM = await (
         navigator.requestMediaKeySystemAccess &&
         navigator.requestMediaKeySystemAccess('com.widevine.alpha', [{
             videoCapabilities: [
@@ -49,11 +49,15 @@ async function videoMetrics(vid) {
             .catch(() => false)
     ) || false
 
-    var drm = 'Not found';
-    if (isL1DRM) {
-        drm = 'L1';
-    } else if (isL3DRM) {
-        drm = 'L3';
+    var drmSupport = 'None';
+    if (supportsL1DRM) {
+        if (supportsL3DRM) {
+            drmSupport = 'L1 and L3';
+        } else {
+            drmSupport = 'L1 only';
+        }
+    } else if (supportsL3DRM) {
+        drmSupport = 'L3 only';
     }
 
     // Create an overlay div element
@@ -82,9 +86,14 @@ async function videoMetrics(vid) {
             <td style="text-align:right; font-weight:bold;">Frame drop: </td>
             <td id="frameDrop"></td>
         </tr>
+        </table>
+        <table>
         <tr>
-            <td style="text-align:right; font-weight:bold;">DRM: </td>
-            <td id="drm"></td>
+            <th>Device Info</th>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">DRM support: </td>
+            <td id="drmSupport"></td>
         </tr>
         </table>`;
 
@@ -104,7 +113,7 @@ async function videoMetrics(vid) {
             document.getElementById("viewport").innerHTML = viewport;
             document.getElementById("videoRes").innerHTML = videoRes;
             document.getElementById("frameDrop").innerHTML = frameDrop;
-            document.getElementById("drm").innerHTML = drm;
+            document.getElementById("drmSupport").innerHTML = drmSupport;
         });
     }
 

@@ -60,6 +60,12 @@ async function videoMetrics(vid) {
         drmSupport = 'L3 only';
     }
 
+    // Whether the video is DRM protected.
+    var drmProtected = 'No';
+    if (vid.mediaKeys !== null) {
+        drmProtected = 'Yes';
+    }
+
     // Create an overlay div element
     const overlay = document.createElement("div");
     overlay.className = "overlay";
@@ -85,6 +91,10 @@ async function videoMetrics(vid) {
         <tr>
             <td style="text-align:right; font-weight:bold;">Frame drop: </td>
             <td id="frameDrop"></td>
+        </tr>
+        <tr>
+            <td style="text-align:right; font-weight:bold;">DRM protected: </td>
+            <td id="drmProtected"></td>
         </tr>
         </table>
         <table>
@@ -113,6 +123,7 @@ async function videoMetrics(vid) {
             document.getElementById("viewport").innerHTML = viewport;
             document.getElementById("videoRes").innerHTML = videoRes;
             document.getElementById("frameDrop").innerHTML = frameDrop;
+            document.getElementById("drmProtected").innerHTML = drmProtected;
             document.getElementById("drmSupport").innerHTML = drmSupport;
         });
     }
